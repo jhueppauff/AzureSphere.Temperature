@@ -387,7 +387,7 @@ static void SendTelemetry(const unsigned char *key, const unsigned char *value, 
 {
 	static char eventBuffer[100] = { 0 };
 	static const char *EventMsgTemplate = "{ \"%s\": \"%s\", \"%s\": \"%s\" }";
-	int len = snprintf(eventBuffer, sizeof(eventBuffer), EventMsgTemplate, key, value, value2, key2);
+	int len = snprintf(eventBuffer, sizeof(eventBuffer), EventMsgTemplate, key, value, key2, value2);
 	if (len < 0)
 		return;
 
