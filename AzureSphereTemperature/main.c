@@ -50,7 +50,7 @@ static void ReportStatusCallback(int result, void *context);
 static const char *GetReasonString(IOTHUB_CLIENT_CONNECTION_STATUS_REASON reason);
 static const char *getAzureSphereProvisioningResultString(
 	AZURE_SPHERE_PROV_RETURN_VALUE provisioningResult);
-static void SendTelemetry(const unsigned char *key, const unsigned char *value);
+static void SendTelemetry(const unsigned char *key, const unsigned char *value, const unsigned char *key2, const unsigned char *value2);
 static void SetupAzureClient(void);
 
 // Function to sent Temperature data/telemetry
@@ -383,11 +383,11 @@ static const char *getAzureSphereProvisioningResultString(
 /// </summary>
 /// <param name="key">The telemetry item to update</param>
 /// <param name="value">new telemetry value</param>
-static void SendTelemetry(const unsigned char *key, const unsigned char *value)
+static void SendTelemetry(const unsigned char *key, const unsigned char *value, const unsigned char *key2, const unsigned char *value2)
 {
 	static char eventBuffer[100] = { 0 };
-	static const char *EventMsgTemplate = "{ \"%s\": \"%s\" }";
-	int len = snprintf(eventBuffer, sizeof(eventBuffer), EventMsgTemplate, key, value);
+	static const char *EventMsgTemplate = "{ \"%s\": \"%s\", \"%s\": \"%s\" }";
+	int len = snprintf(eventBuffer, sizeof(eventBuffer), EventMsgTemplate, key, value, value2, key2);
 	if (len < 0)
 		return;
 
@@ -484,44 +484,14 @@ void SendTemperature(void)
 {
 	GroveTempHumiSHT31_Read(tempHumiditySensor);
 	float temperature = GroveTempHumiSHT31_GetTemperature(tempHumiditySensor);
-	//float humidity = GroveTempHumiSHT31_GetHumidity(tempHumiditySensor);
+	float humidity = GroveTempHumiSHT31_GetHumidity(tempHumiditySensor);
 
 	char tempBuffer[20];
+	char tempBuffer2[20];
 	int len = snprintf(tempBuffer, 20, "%3.2f", temperature);
-	if (len > 0)
+	int len2 = snprintf(tempBuffer2, 20, "%3.2f", humidity);
+	if (len > 0 && len2 > 0)
 	{
-		SendTelemetry("Temperature", tempBuffer);
+		SendTelemetry("Temperature", tempBuffer, "Humidity", tempBuffer2);
 	}
 }
-
-/*int main(int argc, char *argv[])
-{
-	// 3. initialize i2c feed with baud rate and temp humidity sensor
-	int i2cFeed;
-	GroveShield_Initialize(&i2cFeed, 230400);
-	void* tempHumiditySensor = GroveTempHumiSHT31_Open(i2cFeed);
-
-	struct sigaction action;
-	memset(&action, 0, sizeof(struct sigaction));
-	action.sa_handler = TerminationHandler;
-	sigaction(SIGTERM, &action, NULL);
-
-	// FYI - loop is every 30 minutes
-	const int sleepTime = 1800000;
-	while (!terminationRequired) {
-
-		GroveTempHumiSHT31_Read(tempHumiditySensor);
-		float temperature = GroveTempHumiSHT31_GetTemperature(tempHumiditySensor);
-		float humidity = GroveTempHumiSHT31_GetHumidity(tempHumiditySensor);
-
-		Log_Debug("Temperature: %.1fC\n", temperature);
-		Log_Debug("Humidity: %.1f\%c\n", humidity, 0x25);
-
-#ifdef _WIN32
-		Sleep(sleepTime);
-#else
-		usleep(sleepTime * 1000);
-#endif
-	}
-	return 0;
-}*/
