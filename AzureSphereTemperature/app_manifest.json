@@ -1,0 +1,14 @@
+{
+  "SchemaVersion": 1,
+  "Name" : "AzureSphereTemperature",
+  "ComponentId" : "fa3fabaa-0b5e-42e3-affa-a8e177deac59",
+  "EntryPoint": "/bin/app",
+  "CmdArgs": [],
+  "Capabilities": {
+    "AllowedConnections": [],
+    "Gpio": [ 9 ],
+    "Uart": [],
+    "WifiConfig": false
+  },
+  "ApplicationType":"Default"
+}
