@@ -36,9 +36,17 @@
   <ImportGroup Label="Shared" />
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <IncludePath>C:\Users\julian\source\repos\MT3620_Grove_Shield\MT3620_Grove_Shield_Library;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemGroup>
     <ClCompile Include="main.c" />
     <UpToDateCheckInput Include="app_manifest.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\MT3620_Grove_Shield\MT3620_Grove_Shield_Library\MT3620_Grove_Shield_Library.vcxproj">
+      <Project>{a4f0a16d-b28d-4249-9b0a-eeec5090f21d}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
