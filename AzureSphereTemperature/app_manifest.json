@@ -3,12 +3,12 @@
   "Name": "AzureSphereTemperature",
   "ComponentId": "fa3fabaa-0b5e-42e3-affa-a8e177deac59",
   "EntryPoint": "/bin/app",
-  "CmdArgs": [],
+  "CmdArgs": [ "ID Scope" ],
   "Capabilities": {
-    "AllowedConnections": [],
+    "AllowedConnections": [ "global.azure-devices-provisioning.net", "<your iot hub>.azure-devices.net" ],
     "Gpio": [ 8, 9, 10, 15, 16, 17, 18, 19, 20, 12, 13, 0, 1, 4, 5, 57, 58, 11, 14, 48 ],
     "Uart": [ "ISU0", "ISU3" ],
-    "WifiConfig": false
+    "DeviceAuthentication": "Azure Sphere Tenant Id"
   },
   "ApplicationType": "Default"
 }

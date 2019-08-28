@@ -40,7 +40,11 @@
     <IncludePath>C:\Users\julian\source\repos\MT3620_Grove_Shield\MT3620_Grove_Shield_Library;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemGroup>
+    <ClCompile Include="epoll_timerfd_utilities.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="parson.c" />
+    <ClInclude Include="epoll_timerfd_utilities.h" />
+    <ClInclude Include="parson.h" />
     <UpToDateCheckInput Include="app_manifest.json" />
   </ItemGroup>
   <ItemGroup>
@@ -52,11 +56,23 @@
   <ImportGroup Label="ExtensionTargets" />
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalOptions>-Werror=implicit-function-declaration %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-Werror=implicit-function-declaration  -D AZURE_IOT_HUB_CONFIGURED %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'"> $(SysRoot)\usr\include\azureiot;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|ARM'"> $(SysRoot)\usr\include\azureiot;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <LibraryDependencies>applibs;pthread;gcc_s;c</LibraryDependencies>
       <AdditionalOptions>-Wl,--no-undefined -nodefaultlibs %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalLibraryDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'"> .\azureiot\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">-lm;-lazureiot;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories Condition="'$(Configuration)|$(Platform)'=='Release|ARM'"> .\azureiot\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">-lm;-lazureiot;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreLinkEvent>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">%SYSTEMROOT%\System32\WindowsPowerShell\v1.0\powershell.exe -ExecutionPolicy Bypass -NoProfile -NonInteractive -File "$(ProjectDir)script\validate_manifest.ps1</Command>
+    </PreLinkEvent>
+    <PreLinkEvent>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">%SYSTEMROOT%\System32\WindowsPowerShell\v1.0\powershell.exe -ExecutionPolicy Bypass -NoProfile -NonInteractive -File "$(ProjectDir)script\validate_manifest.ps1</Command>
+    </PreLinkEvent>
   </ItemDefinitionGroup>
 </Project>
